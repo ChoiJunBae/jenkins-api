@@ -1,8 +1,12 @@
+<!--App.vue는 가장 상단의 페이지-->
 <template>
+  <!--라우터 링크 부분-->
   <div id="nav">
     <router-link to="/">Home</router-link> |
-    <router-link to="/pipeline">Pipeline</router-link>
+    <router-link to="/pipeline">Pipeline</router-link> |
+    <router-link to="/info">Information</router-link>
   </div>
+  <!--링크에 따른 view의 처리부-->
   <router-view/>
 </template>
 

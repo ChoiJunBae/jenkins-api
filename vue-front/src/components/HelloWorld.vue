@@ -7,9 +7,8 @@
     </p>
     <h3>Jenkins pipeline tester</h3>
     <ul>
-      <li><a href="" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
+      <li><a href="" target="_blank" rel="noopener">crumb</a></li>
+      <li><a href="" target="_blank" rel="noopener">router</a></li>
     </ul>
   </div>
 </template>
