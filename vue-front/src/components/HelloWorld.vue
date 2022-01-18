@@ -6,14 +6,16 @@
       <a href="http://100.0.0.159:8080" target="_blank" rel="noopener">Jenkins UI</a>
     </p>
     <h3>Jenkins pipeline tester</h3>
-    <ul>
-      <li><a href="" target="_blank" rel="noopener">crumb</a></li>
-      <li><a href="" target="_blank" rel="noopener">router</a></li>
-    </ul>
+<!--    <ul>-->
+<!--      <li><a href="" target="_blank" rel="noopener">crumb</a></li>-->
+<!--      <li><a href="" target="_blank" rel="noopener">router</a></li>-->
+<!--    </ul>-->
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: 'HelloWorld',
   props: {
