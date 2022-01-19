@@ -44,4 +44,8 @@ public class JenkinsApiService {
         }
         return crumb;
     }
+
+    public void buildTest(String token){
+
+    }
 }

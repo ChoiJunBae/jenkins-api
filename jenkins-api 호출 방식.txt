@@ -1,0 +1,21 @@
+## jenkins-api 호출 방식 ##
+
+#-------------------------------------------------------------------------------------#
+jenkins-api id      : admin
+jenkins-api pw      : okestro2018
+jenkins-api server  : 100.0.0.159
+jenkins-api port    : 8080
+jenkins-api token   : 114122cca5cd350667557b80b22dc2d501
+jenkins-api crumb   : d8588d40410fe78d8153d524317ce9cf84dba21685e7f69bbba0ff72328c55cf
+#-------------------------------------------------------------------------------------#
+
+## crumb 요청
+wget -q --auth-no-challenge --user admin --password okestro2018 --output-document - 'http://100.0.0.159:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
+
+## Job 실행
+curl -I -X POST http://admin:113969aebae5be1269de7ed7643cc5a71c@100.0.0.159:8080/job/test/build -H "Jenkins-Crumb:d8588d40410fe78d8153d524317ce9cf84dba21685e7f69bbba0ff72328c55cf"
+
+## 설명
+- spring boot에서는 get요청을 통해 crumbIssuer값을 획득하여 객체 등록을 하고
+- 프로젝트 C(생성) R(읽기) U(수정) D(삭제)를 진행하면된다.
+- 위 처럼 admin뒤에 토큰을 사용하지 않고 basic Auth를 통해 일반 사용자 계정 비밀번호로 접근도 가능하다. 
