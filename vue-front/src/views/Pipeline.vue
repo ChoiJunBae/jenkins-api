@@ -5,6 +5,10 @@
     <div>
       <a>crumb token = {{token}}</a>
     </div>
+    <button v-on:click="buildPr()">test 프로젝트 실행하기</button>
+    <div>
+      <a>build status = {{result}}</a>
+    </div>
   </div>
 </template>
 <script>
@@ -28,9 +32,9 @@ export default {
       })
     },
     buildPr(){
-      axios.post('/build')
+      axios.post('pipeline/build')
       .then(res => {
-        this.result=res;
+        this.result=res.data;
         console.log(res);
       }).catch(err=>{
         console.log(err);

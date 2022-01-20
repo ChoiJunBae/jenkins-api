@@ -25,7 +25,10 @@ public class JenkinsApiController {
     }
 
     @PostMapping("/build")
-    public void buildTest(){
-        jenkinsApiService.buildTest(token);
+    public String buildTest(){
+        String crumb = jenkinsApiService.getCrumb("http://100.0.0.159:8080/crumbIssuer/api/json");
+        String result = jenkinsApiService.buildTest("http://admin:okestro2018@100.0.0.159:8080/job/test/build",crumb);
+        return result;
+        // 참고 cookie = https://caileb.tistory.com/146
     }
 }
