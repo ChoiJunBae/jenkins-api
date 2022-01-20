@@ -1,22 +1,88 @@
 package com.example.jenkinsapi.service;
 
+import org.apache.http.cookie.Cookie;
 import org.json.JSONObject;
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.Base64;
+import java.util.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 
 import static java.lang.System.out;
 @Service
 public class JenkinsApiService {
+
+    @Autowired
+    public static void getCookie(String targetUrl){
+        try {
+            URL url = new URL(targetUrl);
+            URLConnection connection = url.openConnection();
+            /*
+             * Cookie getting
+             * */
+            Map<String, List<String>> headerFields = connection.getHeaderFields();
+
+            Set<String> headerFieldsSet = headerFields.keySet();
+            Iterator<String> hearerFieldsIter = headerFieldsSet.iterator();
+
+            while (hearerFieldsIter.hasNext()) {
+                String headerFieldKey = hearerFieldsIter.next();
+
+                if ("Set-Cookie".equalsIgnoreCase(headerFieldKey)) {
+                    List<String> headerFieldValue = headerFields.get(headerFieldKey);
+
+                    for (String headerValue : headerFieldValue) {
+                        System.out.println("Cookie Found...");
+
+                        String[] fields = headerValue.split(";\\s*");
+
+                        String cookieValue = fields[0];
+                        String expires = null;
+                        String path = null;
+                        String domain = null;
+                        boolean secure = false;
+
+                        // Parse each field
+                        for (int j = 1; j < fields.length; j++) {
+                            if ("secure".equalsIgnoreCase(fields[j])) {
+                                secure = true;
+                            }
+                            else if (fields[j].indexOf('=') > 0) {
+                                String[] f = fields[j].split("=");
+                                if ("expires".equalsIgnoreCase(f[0])) {
+                                    expires = f[1];
+                                }
+                                else if ("domain".equalsIgnoreCase(f[0])) {
+                                    domain = f[1];
+                                }
+                                else if ("path".equalsIgnoreCase(f[0])) {
+                                    path = f[1];
+                                }
+                            }
+                        }
+
+                        System.out.println("cookieValue:" + cookieValue);
+                        System.out.println("expires:" + expires);
+                        System.out.println("path:" + path);
+                        System.out.println("domain:" + domain);
+                        System.out.println("secure:" + secure);
+
+                        System.out.println("*****************************************");
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     /*
     * crumb 값이 있어야지만 JenkinsApi에 Post요청을 보낼 수 있음.
@@ -24,6 +90,7 @@ public class JenkinsApiService {
     @Autowired
     public static String getCrumb(String targetURL){
         String crumb = null;
+        String cookie = null;
 
         try {
             //Connection을 진행할 URL선언부
@@ -35,6 +102,8 @@ public class JenkinsApiService {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             //httpUrl커넥션의 방식 결정
             connection.setRequestMethod("GET");
+
+
 
             //항상 갱신된 내용을 가져옴.
             connection.setDoOutput(true);
@@ -53,14 +122,14 @@ public class JenkinsApiService {
                 crumb = jsonObject.getString("crumb");
                 out.println("crumb token ---> "+crumb);
             }
+
+
+
         } catch(Exception e) {
             e.printStackTrace();
         }
         return crumb;
     }
-
-
-
 
     public String buildTest(String buildUrl, String token){
         URL url = null;

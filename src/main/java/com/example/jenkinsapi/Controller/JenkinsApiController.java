@@ -4,6 +4,7 @@ import com.example.jenkinsapi.JenkinsApi;
 import com.example.jenkinsapi.service.JenkinsApiService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.cookie.Cookie;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +18,12 @@ public class JenkinsApiController {
 
     private final JenkinsApiService jenkinsApiService;
     private String token;
+    private String cookie;
 
     @GetMapping("/crumb")
     public String getCrumb(){
         token = jenkinsApiService.getCrumb("http://100.0.0.159:8080/crumbIssuer/api/json");
+        jenkinsApiService.getCookie("http://100.0.0.159:8080/crumbIssuer/api/json");
         return token;
     }
 
