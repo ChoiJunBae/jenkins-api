@@ -18,6 +18,7 @@ public class JenkinsApiController {
 
     private final JenkinsApiService jenkinsApiService;
     String[] token;
+    Object list;
     private String cookie;
 
     @GetMapping("/crumb")
@@ -26,11 +27,16 @@ public class JenkinsApiController {
         return token;
     }
 
+    @GetMapping("/List")
+    public Object getList(){
+        list = jenkinsApiService.getList("http://admin:okestro2018@100.0.0.159:8080/api/json?tree=jobs[name,color]");
+        return list;
+    }
+
     @PostMapping("/build")
     public String buildTest(){
         String[] token = jenkinsApiService.getCrumb("http://100.0.0.159:8080/crumbIssuer/api/json");
         String result = jenkinsApiService.buildTest("http://admin:okestro2018@100.0.0.159:8080/job/test/build", token);
-
         return result;
     }
 }

@@ -48,7 +48,7 @@ public class JenkinsApiService {
             //httpUrl커넥션의 방식 결정
             connection.setRequestMethod("GET");
 
-            //항상 갱신된 내용을 가져옴.
+            //항상 갱신된 내용을 가져옴
             connection.setDoOutput(true);
 
             //Request Header에 어떤 값을 담을지 선택한다.
@@ -90,6 +90,15 @@ public class JenkinsApiService {
         }
         out.println("다음 2개의 값 획득 성공\ncrumb = "+crumb+"\ncookie = "+cookies);
         return new String[]{crumb, cookies};
+    }
+
+    /*
+    * pipeline의 리스트를 출력해주는 함수
+    * */
+    public Object getList(String targetUrl){
+
+
+        return "";
     }
 
 
