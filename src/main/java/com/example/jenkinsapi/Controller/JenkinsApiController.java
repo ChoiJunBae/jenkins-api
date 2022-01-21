@@ -17,20 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class JenkinsApiController {
 
     private final JenkinsApiService jenkinsApiService;
-    private String token;
+    String[] token;
     private String cookie;
 
     @GetMapping("/crumb")
-    public String getCrumb(){
+    public String[] getCrumb(){
         token = jenkinsApiService.getCrumb("http://100.0.0.159:8080/crumbIssuer/api/json");
-        jenkinsApiService.getCookie("http://100.0.0.159:8080/crumbIssuer/api/json");
         return token;
     }
 
     @PostMapping("/build")
     public String buildTest(){
-        String crumb = jenkinsApiService.getCrumb("http://100.0.0.159:8080/crumbIssuer/api/json");
-        String result = jenkinsApiService.buildTest("http://admin:okestro2018@100.0.0.159:8080/job/test/build",crumb);
+        String[] token = jenkinsApiService.getCrumb("http://100.0.0.159:8080/crumbIssuer/api/json");
+        String result = jenkinsApiService.buildTest("http://admin:okestro2018@100.0.0.159:8080/job/test/build", token);
+
         return result;
     }
 }
