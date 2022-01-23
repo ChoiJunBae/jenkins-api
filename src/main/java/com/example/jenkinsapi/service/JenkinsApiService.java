@@ -9,6 +9,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.juli.logging.Log;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,10 +96,41 @@ public class JenkinsApiService {
     /*
     * pipeline의 리스트를 출력해주는 함수
     * */
-    public Object getList(String targetUrl){
+    public String getList(String targetURL){
+        String line = null;
+        String listName ;
+//        String param = "tree=jobs[name,color]";
+//        targetURL += param;
+        String name = null;
+        try {
+            URL url = new URL (targetURL);
 
+            String encoding = Base64.getEncoder().encodeToString(("admin:okestro2018").getBytes("UTF-8"));
 
-        return "";
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoOutput(true);
+            connection.setRequestProperty  ("Authorization", "Basic " + encoding);
+            InputStream content = (InputStream)connection.getInputStream();
+            BufferedReader in = new BufferedReader (new InputStreamReader (content));
+//            String line;
+            //line에는 in에 담긴 값을 값이 없을때까지 읽어서 담아준다.
+            while ((line = in.readLine()) != null) {
+                //out.println("응답 값 ---> "+line);
+                //한줄로 반환되기 때문에 JSONObject로 내가 필요한 값만 추출해낸다.
+                JSONObject jsonObject = new JSONObject(line);
+                JSONArray jsonArray = jsonObject.getJSONArray("jobs");
+
+                for(int i =0; i<jsonArray.length(); i++){
+                    JSONObject obj = jsonArray.getJSONObject(i);
+                    name = obj.getString("name");
+                }
+                out.println(name);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return line;
     }
 
 

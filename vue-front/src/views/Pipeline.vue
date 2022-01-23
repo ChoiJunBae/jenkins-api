@@ -1,7 +1,7 @@
 <template>
   <div class="pipeline">
     <h1>This is an about page</h1>
-    <button v-on:click="getCrumb()"><h1>crumb 가져오기</h1></button>
+    <button v-on:click="getCrumb()">crumb 가져오기</button>
     <div>
       <a>crumb token = {{token}}</a>
     </div>
@@ -10,7 +10,8 @@
       <a>build status = {{result}}</a>
     </div>
     <div>
-
+      <p>Job list</p>
+      <p>{{list}}</p>
     </div>
   </div>
 </template>
@@ -22,7 +23,11 @@ export default {
     return{
       token: null,
       result: null,
+      list: null,
     }
+  },
+  created() {
+    this.getList();
   },
   methods:{
     getCrumb() {
@@ -42,10 +47,16 @@ export default {
       }).catch(err=>{
         console.log(err);
       })
+    },
+    getList: function (){
+      axios.get('pipeline/list')
+        .then(res=> {
+          this.list=res;
+          console.log(res);
+        }).catch(err=>{
+        console.log(err)
+      })
     }
-  },
-  // created() {
-  //   this.getCrumb();
-  // }
+  }
 }
 </script>

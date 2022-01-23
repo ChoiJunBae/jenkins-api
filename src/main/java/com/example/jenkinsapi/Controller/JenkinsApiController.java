@@ -18,8 +18,7 @@ public class JenkinsApiController {
 
     private final JenkinsApiService jenkinsApiService;
     String[] token;
-    Object list;
-    private String cookie;
+    String  list;
 
     @GetMapping("/crumb")
     public String[] getCrumb(){
@@ -27,9 +26,9 @@ public class JenkinsApiController {
         return token;
     }
 
-    @GetMapping("/List")
-    public Object getList(){
-        list = jenkinsApiService.getList("http://admin:okestro2018@100.0.0.159:8080/api/json?tree=jobs[name,color]");
+    @GetMapping("/list")
+    public String getList(){
+        list = jenkinsApiService.getList("http://100.0.0.159:8080/api/json?tree=jobs[name,color]");
         return list;
     }
 
