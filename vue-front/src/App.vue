@@ -4,7 +4,7 @@
   <div id="nav">
     <router-link to="/">Home</router-link> |
     <router-link to="/pipeline">Pipeline</router-link> |
-    <router-link to="/info">Information</router-link>
+    <router-link to="/credential">Credential</router-link>
   </div>
   <!--링크에 따른 view의 처리부-->
   <router-view/>

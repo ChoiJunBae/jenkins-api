@@ -14,12 +14,15 @@
       <option disabled value="">실행할 프토젝트 선택</option>
       <option v-for="list in lists">{{list}}</option>
     </select>
-    <button v-on:click="buildPr()"><h4>test 프로젝트 실행하기</h4></button>
-    <h5>{{result}}</h5>
-    <div/>
-    <div/>
-    <button v-on:click="getStatus()"><h4>실행 결과 확인하기</h4></button>
-    <h5>{{status}}</h5>
+    <div>
+      <button v-on:click="buildPr()"><h4>test 프로젝트 실행하기</h4></button>
+      <button v-on:click="getStatus()"><h4>실행 결과 확인하기</h4></button>
+    </div>
+    <table align="center" border="1">
+      <th>result actions</th>
+      <tr>build : {{result}}</tr>
+      <tr>status : {{status}}</tr>
+    </table>
   </div>
 </template>
 <script>

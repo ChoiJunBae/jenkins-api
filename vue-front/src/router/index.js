@@ -13,9 +13,9 @@ const routes = [
     component: () => import('../views/Pipeline.vue')
   },
   {
-    path: '/info',
-    name: 'Info',
-    component: () => import('../views/Info.vue')
+    path: '/credential',
+    name: 'Credential',
+    component: () => import('../views/Credential.vue')
   }
 ]
 
