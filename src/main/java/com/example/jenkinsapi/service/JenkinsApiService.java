@@ -96,12 +96,10 @@ public class JenkinsApiService {
     /*
     * pipeline의 리스트를 출력해주는 함수
     * */
-    public String getList(String targetURL){
+    public String[] getList(String targetURL){
         String line = null;
-        String listName ;
-//        String param = "tree=jobs[name,color]";
-//        targetURL += param;
-        String name = null;
+        Integer length = 0;
+        String[] name = new String[0];
         try {
             URL url = new URL (targetURL);
 
@@ -113,24 +111,54 @@ public class JenkinsApiService {
             connection.setRequestProperty  ("Authorization", "Basic " + encoding);
             InputStream content = (InputStream)connection.getInputStream();
             BufferedReader in = new BufferedReader (new InputStreamReader (content));
-//            String line;
+
             //line에는 in에 담긴 값을 값이 없을때까지 읽어서 담아준다.
             while ((line = in.readLine()) != null) {
                 //out.println("응답 값 ---> "+line);
                 //한줄로 반환되기 때문에 JSONObject로 내가 필요한 값만 추출해낸다.
                 JSONObject jsonObject = new JSONObject(line);
                 JSONArray jsonArray = jsonObject.getJSONArray("jobs");
-
+                length=jsonArray.length();
+                out.println("Jenkins pipeline을 반환합니다...\n총 pipeline --> "+length+"개");
+                name = new String[length];
                 for(int i =0; i<jsonArray.length(); i++){
                     JSONObject obj = jsonArray.getJSONObject(i);
-                    name = obj.getString("name");
+                    name[i] = obj.getString("name");
                 }
-                out.println(name);
             }
         } catch(Exception e) {
             e.printStackTrace();
         }
-        return line;
+        return name;
+    }
+
+    /*
+     * 현재 수행한 JOB의 수행 결과를 확인하기 위해 가장 최근에 실행한 JOB의 수행 번호 확인
+     * * */
+    public String getLastStatus(String targetURL){
+        String line = null;
+        String status = null;
+        try {
+            URL url = new URL (targetURL);
+            String encoding = Base64.getEncoder().encodeToString(("admin:okestro2018").getBytes("UTF-8"));
+
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoOutput(true);
+            connection.setRequestProperty  ("Authorization", "Basic " + encoding);
+
+            InputStream content = (InputStream)connection.getInputStream();
+            BufferedReader in = new BufferedReader (new InputStreamReader (content));
+
+            while ((line = in.readLine()) != null) {
+                JSONObject jsonObject = new JSONObject(line);
+                status = jsonObject.getString("status");
+                out.println("빌드 결과 ---> "+status);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return status;
     }
 
 

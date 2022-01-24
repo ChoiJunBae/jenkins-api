@@ -1,18 +1,25 @@
 <template>
   <div class="pipeline">
     <h1>This is an about page</h1>
-    <button v-on:click="getCrumb()">crumb 가져오기</button>
     <div>
-      <a>crumb token = {{token}}</a>
+      <table border="1" align="center">
+        <th>목록</th>
+        <tr style="margin: 25px" v-for="list in lists">
+          {{list}}
+        </tr>
+      </table>
     </div>
-    <button v-on:click="buildPr()">test 프로젝트 실행하기</button>
-    <div>
-      <a>build status = {{result}}</a>
-    </div>
-    <div>
-      <p>Job list</p>
-      <p>{{list}}</p>
-    </div>
+    <div style="margin-top:50px">{{token}}</div>
+    <select v-model="job">
+      <option disabled value="">실행할 프토젝트 선택</option>
+      <option v-for="list in lists">{{list}}</option>
+    </select>
+    <button v-on:click="buildPr()"><h4>test 프로젝트 실행하기</h4></button>
+    <h5>{{result}}</h5>
+    <div/>
+    <div/>
+    <button v-on:click="getStatus()"><h4>실행 결과 확인하기</h4></button>
+    <h5>{{status}}</h5>
   </div>
 </template>
 <script>
@@ -21,15 +28,27 @@ import axios from "axios";
 export default {
   data() {
     return{
+      job:null,
       token: null,
       result: null,
-      list: null,
+      status:null,
+      lists: [],
     }
   },
   created() {
+    this.getCrumb();
     this.getList();
   },
   methods:{
+    getList: function (){
+      axios.get('pipeline/list')
+        .then(res=> {
+          this.lists=res.data;
+          console.log(res);
+        }).catch(err=>{
+        console.log(err)
+      })
+    },
     getCrumb() {
       axios.get('/pipeline/crumb')
         .then(res => {
@@ -40,20 +59,26 @@ export default {
       })
     },
     buildPr(){
-      axios.post('pipeline/build')
+      var params = new URLSearchParams();
+      params.append('jobName', this.job);
+      axios.post('pipeline/build', params)
       .then(res => {
-        this.result=res.data;
+        this.result = res.data
         console.log(res);
       }).catch(err=>{
         console.log(err);
       })
     },
-    getList: function (){
-      axios.get('pipeline/list')
-        .then(res=> {
-          this.list=res;
-          console.log(res);
-        }).catch(err=>{
+    getStatus(){
+      axios.get('pipeline/status',{
+        params:{
+          jobName: this.job
+        }
+      })
+      .then(res=>{
+        this.status=res.data;
+        console.log(res);
+      }).catch(err=>{
         console.log(err)
       })
     }
