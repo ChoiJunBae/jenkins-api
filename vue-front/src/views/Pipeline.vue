@@ -62,7 +62,7 @@ export default {
       })
     },
     buildPr(){
-      var params = new URLSearchParams();
+      const params = new URLSearchParams();
       params.append('jobName', this.job);
       axios.post('pipeline/build', params)
       .then(res => {

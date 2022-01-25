@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/jenkins.png">
+    <img src="../assets/jenkins.png">
     <HelloWorld msg="Jenkins with REST API TEST"/>
   </div>
 </template>

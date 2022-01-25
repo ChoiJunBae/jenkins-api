@@ -1,5 +1,6 @@
 package com.example.jenkinsapi.service;
 
+import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -197,6 +198,65 @@ public class JenkinsApiService {
             out.println("http response code: "+responseCode);
 
             result="Success for build job";
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            out.println(e.getMessage());
+        }
+        return result;
+    }
+
+    /*
+     * Post를 통한 젠킨스 프로젝트 빌드
+     * */
+    public String AddCreden(String targetUrl, String username, String password, String id, String[] accessToken){
+
+        String result = null;
+        String wwwJson = "{\"\": \"0\", \"credentials\": {\"scope\": \"GLOBAL\", \"username\": \""+username+"\", " +
+                "\"usernameSecret\": false, \"password\": \""+password+"\", \"$redact\": \"password\", \"id\": \""+id+"\", " +
+                "\"description\": \"\", \"stapler-class\": \"com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl\", " +
+                "\"$class\": \"com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl\"}, " +
+                "\"Jenkins-Crumb\": \""+accessToken[0]+"\"}";
+
+//        JSONParser parser = new JSONParser();
+//        JSONObject jsonObject = (JSONObject) parser.parse(wwwJson);
+
+        try{
+            String encoding = Base64.getEncoder().encodeToString(("admin:okestro2018").getBytes("UTF-8"));
+
+            URL url = new URL(targetUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            out.println("\n\nCredential 생성 요청에 성공했습니다...");
+
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Authorization", "Basic "+encoding);
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(5000);
+            connection.setRequestProperty("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Connection", "keep-alive");
+            connection.setRequestProperty("Cookie", accessToken[1]);
+            connection.setRequestProperty("json", wwwJson);
+            connection.setDoOutput(true);
+
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append("Jenkins-Crumb=").append(accessToken[0]);
+
+
+            PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(connection.getOutputStream(), "euc-kr"));
+            printWriter.write(stringBuffer.toString());
+
+            printWriter.flush();
+
+            int responseCode = 0;
+            responseCode = connection.getResponseCode();
+            out.println(responseCode);
+            if (responseCode<400){
+                result="성공";
+            }
+            else{
+                result="에러";
+            }
         }
         catch (Exception e){
             e.printStackTrace();
